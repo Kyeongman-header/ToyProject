@@ -8,7 +8,7 @@ from django.core import serializers
 from django_filters.rest_framework import DjangoFilterBackend 
 from django_filters import FilterSet,DateTimeFilter,ModelChoiceFilter
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from .models import *
 from .serializers import *
 
@@ -21,7 +21,7 @@ def index(request):
 class ImageFilter(FilterSet):
     pub_date__gte=DateTimeFilter(field_name="pub_date",lookup_expr='gte')
     pub_date__lte=DateTimeFilter(field_name="pub_date",lookup_expr='lte')
-    user=ModelChoiceFilter(field_name="user",queryset=User.objects.all())
+    user=ModelChoiceFilter(field_name="user",queryset=get_user_model().objects.all())
     class Meta:
         model=Image
         fields=['pub_date__gte','pub_date__lte','user']
@@ -37,14 +37,14 @@ class ImageViewSet(ModelViewSet):
 
 class UserViewSet(ReadOnlyModelViewSet):
     serializer_class=UserSerializer
-    queryset=User.objects.all()
+    queryset=get_user_model().objects.all()
     permission_classes=[IsAdminUser]
     #authentication_classes=[TokenAuthentication]
 
 class PointsFilter(FilterSet):
     pub_date__gte=DateTimeFilter(field_name="pub_date",lookup_expr='gte')
     pub_date__lte=DateTimeFilter(field_name="pub_date",lookup_expr="lte")
-    user=ModelChoiceFilter(field_name="user",queryset=User.objects.all())
+    user=ModelChoiceFilter(field_name="user",queryset=get_user_model().objects.all())
     class Meta:
         model=Points
         fields=['pub_date__gte','pub_date__lte','user']
